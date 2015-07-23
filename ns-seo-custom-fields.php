@@ -1,6 +1,6 @@
 <?php
 /*
-Plugin Name: NS Custom Fields Analysis for WordPress SEO
+Plugin Name: NS Custom Fields Analysis for WordPress SEO - Forked by 1minus1 and extend custom fields to 50
 Plugin URI: http://neversettle.it
 Description: Include content from custom fields in the Yoast WordPress SEO plugin keyword analysis (WordPress SEO by Yoast is required).
 Author: Never Settle
@@ -38,8 +38,8 @@ class NS_SEO_Custom_Fields {
 		if( class_exists('NS_SEO_Automation') ) return;
 		
 		$this->path = plugin_dir_path( __FILE__ );
-		$this->wp_plugin_page = "http://wordpress.org/plugins/ns-seo-custom-fields";
-		$this->ns_plugin_page = "http://neversettle.it/ns-automation-wp-seo";
+		$this->wp_plugin_page = "https://github.com/1minus1limited/ss-seo-custom-fields";
+		$this->ns_plugin_page = "https://github.com/1minus1limited/ss-seo-custom-fields";
 		$this->social_desc = "Power up WordPress SEO (by Yoast) with Custom Field Automation!";
 		
 		add_action( 'plugins_loaded', array($this, 'setup_plugin') );
@@ -105,10 +105,18 @@ class NS_SEO_Custom_Fields {
 	 * SETTINGS PAGE
 	 */
 	
+    function custom_fields_labels($label) {
+        for ($i = 1; $i <= 50; $i++) {
+            $labels .= "$label $i<br/>";
+        }
+        return $labels;
+    }
+
+
 	function register_settings_field(){
 		$label = __('Custom field','ns-seo-custom');
 		add_settings_section( 'default', false, false, 'ns_seo_custom' );
-		add_settings_field( 'ns_seo_custom_fieldname', "$label 1<br/> $label 2<br/> $label 3<br/>", array($this,'show_settings_field'), 'ns_seo_custom', 'default' );
+		add_settings_field( 'ns_seo_custom_fieldname', $this->custom_fields_labels($label), array($this,'show_settings_field'), 'ns_seo_custom', 'default' );
 		register_setting( 'ns_seo_custom', 'ns_seo_custom_fieldname', array($this, 'sanitize_settings_field') );
 	}	
 
@@ -216,12 +224,12 @@ class NS_SEO_Custom_Fields {
 
 	function show_settings_field($args){
 		$saved_values = (array) get_option('ns_seo_custom_fieldname');
-		for( $x=0; $x<3; $x++ ){
+		for( $x=0; $x<50; $x++ ){
 			if( !isset($saved_values[$x]) ){
 				$saved_values[$x] = '';
 			}
 		}
-		foreach( array($saved_values[0],$saved_values[1],$saved_values[2]) as $value){
+		foreach( $saved_values as $value){
 			echo '<input type="text" name="ns_seo_custom_fieldname[]" value="'.$value.'" /><br/>';
 		}
 	}
